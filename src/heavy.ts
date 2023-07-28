@@ -1,5 +1,9 @@
 import { parentPort } from "worker_threads";
 
-setTimeout(() => {
-    parentPort?.postMessage("waited 10 seconds");
-}, 10_000);
+const args = process.argv.slice(2);
+
+await new Promise((resolve) => {
+    setTimeout(resolve, 10_000);
+});
+
+parentPort?.postMessage(`waited 10 seconds for ${args}`);

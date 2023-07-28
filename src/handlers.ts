@@ -15,7 +15,9 @@ const indexHandler: RequestHandler = (req, res, appState) => {
 };
 
 const heavyHandler: RequestHandler = (req, res) => {
-    const worker = new Worker("./dist/heavy.js");
+    const worker = new Worker("./dist/heavy.js", {
+        argv: ["arg1", "arg2", "arg3"],
+    });
     worker.on("message", (data: any) => {
         res.setHeader("content-type", "application/json");
         res.writeHead(200);
