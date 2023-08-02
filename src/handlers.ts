@@ -14,20 +14,28 @@ const indexHandler: RequestHandler = (req, res, appState) => {
     res.end(JSON.stringify({ counter: appState.counter }));
 };
 
-const heavyHandler: RequestHandler = (req, res) => {
-    const worker = new Worker("./dist/heavy.js", {
-        argv: ["arg1", "arg2", "arg3"],
+const heavyHandler: RequestHandler = async (req, res) => {
+    const result = new Promise((resolve, reject) => {
+        const worker = new Worker("./dist/heavy.js", {
+            argv: ["arg1", "arg2", "arg3"],
+        });
+        worker.on("message", (data: any) => {
+            resolve(data);
+        });
+        worker.on("error", (err: any) => {
+            reject(err);
+        });
     });
-    worker.on("message", (data: any) => {
+    try {
+        const data = await result;
         res.setHeader("content-type", "application/json");
         res.writeHead(200);
         res.end(JSON.stringify({ data }));
-    });
-    worker.on("error", (err: any) => {
+    } catch (err) {
         res.setHeader("content-type", "application/json");
         res.writeHead(500);
-        res.end(JSON.stringify({ msg: err }));
-    });
+        res.end(JSON.stringify({ err }));
+    }
 };
 
 export { indexHandler, heavyHandler };
