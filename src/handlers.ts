@@ -9,24 +9,10 @@ type Handler = (
     ctx: Context,
 ) => void;
 
-class Handlers {
-    map: Map<string, Handler>;
-
-    constructor() {
-        this.map = new Map<string, Handler>();
-    }
-
-    set(pathname: string, handler: Handler) {
-        this.map.set(pathname, handler);
-    }
-
-    get(url: URL) {
-        return this.map.get(url.pathname);
-    }
-}
+type Handlers = Map<string, Handler>;
 
 function setupHandlers(): Handlers {
-    const handlers = new Handlers();
+    const handlers = new Map<string, Handler>();
     handlers.set("/", indexHandler);
     handlers.set("/increment", incrementHandler);
     handlers.set("/set", setHandler);

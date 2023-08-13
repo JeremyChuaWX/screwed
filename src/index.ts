@@ -15,7 +15,7 @@ const server = http.createServer(function (req, res) {
     if (url === undefined) {
         undefinedUrlHandler(req, res);
     } else {
-        const handler = handlers.get(url);
+        const handler = handlers.get(url.pathname);
         if (handler !== undefined) {
             // handler for url was found
             handler(url, req, res, ctx);
